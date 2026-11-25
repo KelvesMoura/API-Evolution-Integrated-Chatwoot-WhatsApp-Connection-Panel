@@ -4,7 +4,7 @@ A **multi-page** front-end built with **plain HTML, CSS, and JavaScript** (no fr
 
 🔗 **Backend/orchestration:** n8n webhooks at `n8n.m2k.app.br` (login, dashboard, connect, disconnect, and register flows)
 
-🌐 **Access the page published here:** [https://link-generico.com](https://link-generico.com)
+🌐 **Access the page published here:** [Demo Here](https://kelvesmoura.github.io/API-Evolution-Integrated-Chatwoot-WhatsApp-Connection-Panel)
 
 ---
 
@@ -40,15 +40,15 @@ A **multi-page** front-end built with **plain HTML, CSS, and JavaScript** (no fr
 
 ## Tech Stack
 
-| Layer            | Technology                                                 |
-| ---------------- | ---------------------------------------------------------- |
-| Language         | JavaScript (native ES, no transpilation)                   |
-| Markup/Styling   | Pure HTML5 + CSS3 (no framework/utilities)                 |
-| Icons            | Font Awesome (via CDN kit)                                 |
-| Orchestration    | n8n Webhooks (`n8n.m2k.app.br`)                            |
-| Session          | Token stored in `localStorage` (`Bearer` authorization)    |
-| HTTP Client      | Native `fetch` (JSON and `blob`)                           |
-| Hosting          | Static files (HTML/CSS/JS) — no Node process in production |
+| Layer          | Technology                                                 |
+| -------------- | ---------------------------------------------------------- |
+| Language       | JavaScript (native ES, no transpilation)                   |
+| Markup/Styling | Pure HTML5 + CSS3 (no framework/utilities)                 |
+| Icons          | Font Awesome (via CDN kit)                                 |
+| Orchestration  | n8n Webhooks (`n8n.m2k.app.br`)                            |
+| Session        | Token stored in `localStorage` (`Bearer` authorization)    |
+| HTTP Client    | Native `fetch` (JSON and `blob`)                           |
+| Hosting        | Static files (HTML/CSS/JS) — no Node process in production |
 
 ---
 
@@ -76,11 +76,11 @@ API-Evolution-Integrated-Chatwoot/
 
 The project is deliberately simple: the three pages share a single `script.js`, and the functions that run depend on which elements exist in the current page (for example, `loadingUser()` runs only on `dashboard.html`).
 
-| Layer                     | Responsibility                                                                                                                                                                   |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Authentication**        | `login` and `register` validate the fields, call the n8n webhooks, and store/send the token; the logout icon clears `token` and `connection` from `localStorage`                |
-| **Dashboard**             | `loadingUser` and `updateDashboard` fetch and render the instance name and status, update the action button, and handle `401`/`403` responses by ending the session             |
-| **Connection Cycle**      | `toggleConnection`, `fetchAndDisplayQRCode`, `startQrTimer`, `updateTimer`, `handleTimerExpired`, and `stopQrProcess` implement the flow of generation → waiting → renewal → confirmation/expiration |
+| Layer                | Responsibility                                                                                                                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Authentication**   | `login` and `register` validate the fields, call the n8n webhooks, and store/send the token; the logout icon clears `token` and `connection` from `localStorage`                                     |
+| **Dashboard**        | `loadingUser` and `updateDashboard` fetch and render the instance name and status, update the action button, and handle `401`/`403` responses by ending the session                                  |
+| **Connection Cycle** | `toggleConnection`, `fetchAndDisplayQRCode`, `startQrTimer`, `updateTimer`, `handleTimerExpired`, and `stopQrProcess` implement the flow of generation → waiting → renewal → confirmation/expiration |
 
 There are no modules, bundler, or third-party dependencies beyond loading Font Awesome via `<script>` in each page. State lives in global variables (`timeLeft`, `qrAttempts`, timer IDs) and in `localStorage` (`token` and `connection`).
 
@@ -104,13 +104,13 @@ There are no modules, bundler, or third-party dependencies beyond loading Font A
 
 This front-end has no server-side logic of its own — all orchestration happens through n8n webhooks, called directly from the browser:
 
-| Webhook      | Method | Auth   | Usage                                                                       |
-| ------------ | :----: | :----: | --------------------------------------------------------------------------- |
-| `login`      |  POST  |   —    | Validates email and password and returns the session `token`                |
-| `dashboard`  |  GET   | Bearer | Returns the instance name and connection state (`open` or not)              |
-| `connect`    |  GET   | Bearer | Returns the QR Code (base64 JSON or image blob) or `connection: "open"`     |
-| `disconnect` |  GET   | Bearer | Disconnects the instance and returns the updated state                      |
-| `register`   |  POST  | Bearer | Creates a new user from the submitted email and password                    |
+| Webhook      | Method |  Auth  | Usage                                                                   |
+| ------------ | :----: | :----: | ----------------------------------------------------------------------- |
+| `login`      |  POST  |   —    | Validates email and password and returns the session `token`            |
+| `dashboard`  |  GET   | Bearer | Returns the instance name and connection state (`open` or not)          |
+| `connect`    |  GET   | Bearer | Returns the QR Code (base64 JSON or image blob) or `connection: "open"` |
+| `disconnect` |  GET   | Bearer | Disconnects the instance and returns the updated state                  |
+| `register`   |  POST  | Bearer | Creates a new user from the submitted email and password                |
 
 Calls with a body use `Content-Type: application/json`, except for reading the QR Code image, which may come as a `blob` depending on the response type.
 
@@ -122,17 +122,17 @@ Calls with a body use `Content-Type: application/json`, except for reading the Q
 
 The application is made of three screens with visual states controlled by `hidden` attributes:
 
-| Element           | Behavior                                                                                                      |
-| ----------------- | ------------------------------------------------------------------------------------------------------------- |
-| Login form        | Email and password fields; submits on button click or the `Enter` key                                         |
-| Dashboard header  | Instance name and a status badge (green for connected, red for disconnected)                                  |
-| Action button     | Toggles between **Conectar** and **Desconectar** according to the current status                              |
-| Loader            | Spinner shown during requests to the webhooks                                                                 |
-| QR Code           | Image displayed as soon as it's returned by the API, hidden between renewals and once connected               |
-| Timer             | 25-second countdown until the next verification/renewal                                                       |
-| Register form     | Email and password for a new user, with a back icon to the dashboard                                          |
-| Icons             | Register (visible for `M2K` instances), back, and logout, which ends the session                              |
-| Notes             | Validation messages, errors, or status messages, which automatically disappear after 4s                       |
+| Element          | Behavior                                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------- |
+| Login form       | Email and password fields; submits on button click or the `Enter` key                           |
+| Dashboard header | Instance name and a status badge (green for connected, red for disconnected)                    |
+| Action button    | Toggles between **Conectar** and **Desconectar** according to the current status                |
+| Loader           | Spinner shown during requests to the webhooks                                                   |
+| QR Code          | Image displayed as soon as it's returned by the API, hidden between renewals and once connected |
+| Timer            | 25-second countdown until the next verification/renewal                                         |
+| Register form    | Email and password for a new user, with a back icon to the dashboard                            |
+| Icons            | Register (visible for `M2K` instances), back, and logout, which ends the session                |
+| Notes            | Validation messages, errors, or status messages, which automatically disappear after 4s         |
 
 Interface texts are in Brazilian Portuguese (`pt-BR`).
 
